@@ -13,11 +13,29 @@
   1923063428480944139667114773918309212080528]
 -}
 
+int tuple_len(tuple t) asm "TLEN";
+
 () recv_internal() {
 }
 
 ;; testable
 (tuple) fibonacci_sequence (int n, int k) method_id {
-  return null();
+  tuple res = empty_tuple();
+  int f1 = 0; int f2 = 1; int temp = 0;
+  int i = 1;
+  if (n == 0){
+    if (k > 0) {
+      res~tpush(0);
+    }
+  }
+  while (i < n + k){
+    temp = f2;
+    f2 = f1 + f2;
+    f1 = temp;
+    if (i >= n) {
+      res~tpush(f1);
+    }
+    i += 1;
+  }
+  return res;
 }
-
