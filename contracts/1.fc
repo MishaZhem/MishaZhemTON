@@ -15,26 +15,10 @@ forall X -> (tuple, (X)) pop_back (tuple t) asm "UNCONS";
 
 ;; testable
 (cell) find_branch_by_hash(int hash, cell tree) method_id {
-  cell c = begin_cell()
-        .store_uint(1, 16)
-        .store_ref(begin_cell()
-            .store_uint(2, 16)
-        .end_cell())
-        .store_ref(begin_cell()
-            .store_uint(3, 16)
-            .store_ref(begin_cell()
-                .store_uint(4, 16)
-            .end_cell())
-            .store_ref(begin_cell()
-                .store_uint(5, 16)
-            .end_cell())
-        .end_cell())
-    .end_cell();
-
     ;; creating tuple with no data, which plays the role of stack
     tuple stack = null();
     ;; bring the main cell into the stack to process it in the loop
-    stack~push_back(c);
+    stack~push_back(tree);
     ;; do it until stack is not null
     while (~ stack.is_null()) {
         ;; get the cell from the stack and convert it to a slice to be able to process it
