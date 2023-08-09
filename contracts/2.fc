@@ -68,4 +68,3 @@ forall X -> (tuple, X) tuple_pop(tuple t) asm "TPOP";
   }
   return res;
 }
-
