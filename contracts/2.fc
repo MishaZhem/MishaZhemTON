@@ -9,11 +9,62 @@
   After calculating the result matrix, the function should return final result (as tuple).
 -}
 
+int tuple_len(tuple t) asm "TLEN";
+forall X -> (tuple, X) list_next(tuple list) asm( -> 1 0) "UNCONS";
+forall X -> (tuple, X) tuple_pop(tuple t) asm "TPOP";
+;; at(index)
+
 () recv_internal() {
+  ;; test
+}
+
+(tuple) change_by_index(tuple X, int i, int j, int val){
+  tuple by_j = empty_tuple(); tuple by_i = empty_tuple();
+  int g = 0;
+  while (g < X.at(i).tuple_len()) {
+    if (g == j) {
+      by_j~tpush(val + X.at(i).at(g));
+    } else {
+      by_j~tpush(X.at(i).at(g));
+    }
+    g += 1;
+  }
+  g = 0;
+  while (g < X.tuple_len()){
+    if (g == i){
+      by_i~tpush(by_j);
+    } else {
+      by_i~tpush(X.at(g));
+    }
+    g += 1;
+  }
+  return by_i;
 }
 
 ;; testable
 (tuple) matrix_multiplier(tuple matrixA, tuple matrixB) method_id {
-  return null();
+  int n1 = matrixA.tuple_len();
+  int m1 = matrixA.first().tuple_len();
+  int m2 = matrixB.tuple_len();
+  int p2 = matrixB.first().tuple_len();
+  ~dump(1);
+  int i = 0; int j = 0; int c = 0;
+  tuple res = empty_tuple(); tuple temp = empty_tuple();
+  while (i < p2) { temp~tpush(0); i += 1;}
+  i = 0;
+  while (i < n1) { res~tpush(temp); i += 1;}
+  i = 0;
+  while (i < n1){
+    j = 0;
+    while (j < p2) {
+      c = 0;
+      while (c < m1){
+        res = change_by_index(res, i, j, matrixA.at(i).at(c) * matrixB.at(c).at(j));
+        c += 1;
+      }
+      j += 1;
+    }
+    i += 1;
+  }
+  return res;
 }
-
