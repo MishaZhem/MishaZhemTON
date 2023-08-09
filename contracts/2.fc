@@ -18,8 +18,7 @@ int tuple_len(tuple t) asm "TLEN";
 ;; testable
 (tuple) matrix_multiplier(tuple matrixA, tuple matrixB) method_id {
   int n1 = matrixA.tuple_len();
-  int m1 = matrixA.first().tuple_len();
-  int m2 = m1;
+  int m = matrixB.tuple_len();
   int p2 = matrixB.first().tuple_len();
   int i = 0; int j = 0; int c = 0; int v = 0;
   tuple res = empty_tuple();
@@ -28,7 +27,7 @@ int tuple_len(tuple t) asm "TLEN";
     tuple temp = empty_tuple();
     while (j < p2) {
       c = 0; v = 0;
-      while (c < m1){
+      while (c < m){
         v += matrixA.at(i).at(c) * matrixB.at(c).at(j);
         c += 1;
       }
