@@ -21,7 +21,8 @@ forall X -> (tuple) to_tuple (X x) asm "NOP";
 ;; testable
 (tuple) fibonacci_sequence (int n, int k) method_id {
   tuple y = empty_tuple();
-  if ((40 >= n) & (n + k > 0)){
+  if (220 >= n) {
+    if ((40 >= n) & (n + k > 0)){
     if ((0 >= n) & (n + k > 40)){
       y~tpush(0);
       y~tpush(1);
@@ -515,6 +516,7 @@ forall X -> (tuple) to_tuple (X x) asm "NOP";
       if ((219 >= n) & (n + k > 219)){ y~tpush(2623059926317798754175087863660165740874359106); }
       if ((220 >= n) & (n + k > 220)){ y~tpush(4244200115309993198876969489421897548446236915); }
     }
+  }
   }
   if ((n + k <= 221)) { return y; }
   if ((240 >= n) & (n + k > 221)){
