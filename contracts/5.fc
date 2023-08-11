@@ -15,6 +15,7 @@
 
 int tuple_len(tuple t) asm "TLEN";
 forall X -> (tuple) to_tuple (X x) asm "NOP";
+int g(int a, int b) asm "ADD";
 
 () recv_internal() {
 }
@@ -30,21 +31,21 @@ forall X -> (tuple) to_tuple (X x) asm "NOP";
   elseif (n >= 50) { i = 50; f_0 = 7778742049; f_1 = 12586269025;}
   if (k == 0) { return y; }
   if (n == 0) { y~tpush(f_0); }
-  int x = n + k;
+  int x = g(n, k);
   if (x == 371) { x = 370; }
   while (i < x){
     if (i >= n) {
       y~tpush(f_1);
     }
-    i += 1;
-    temp = f_0 + f_1;
+    i = g(i, 1);
+    temp = g(f_0, f_1);
     f_0 = f_1;
     f_1 = temp;
     ;; ~dump(i);
     ;; ~dump(f_0);
     ;; ~dump(f_1);
   }
-  x = n + k;
+  x = g(n, k);
   if (x == 371) { y~tpush(f_1); }
   return y;
 }
