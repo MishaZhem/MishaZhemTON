@@ -16,10 +16,9 @@ int tuple_len(tuple t) asm "TLEN";
 (cell) caesar_cipher_encrypt(int shift, cell text) method_id {
   shift %= 26;
   tuple all = empty_tuple();
-  builder g = begin_cell();
   int v = 0;
   while (v >= 0) {
-    g = begin_cell();
+    builder g = begin_cell();
     slice s = text.begin_parse();
     while (s.slice_empty?() != -1){
       int k = s.preload_int(8);
@@ -45,7 +44,7 @@ int tuple_len(tuple t) asm "TLEN";
   while (p >= 0) {
     builder n = all.at(p);
     if (p != all.tuple_len() - 1) {
-      n.store_ref(f);
+      n = n.store_ref(f);
     }
     f = n.end_cell();
     p -= 1;
@@ -58,10 +57,9 @@ int tuple_len(tuple t) asm "TLEN";
 (cell) caesar_cipher_decrypt(int shift, cell text) method_id {
   shift %= 26;
   tuple all = empty_tuple();
-  builder g = begin_cell();
   int v = 0;
   while (v >= 0) {
-    g = begin_cell();
+    builder g = begin_cell();
     slice s = text.begin_parse();
     while (s.slice_empty?() != -1){
       int k = s.preload_int(8);
@@ -87,7 +85,7 @@ int tuple_len(tuple t) asm "TLEN";
   while (p >= 0) {
     builder n = all.at(p);
     if (p != all.tuple_len() - 1) {
-      n.store_ref(f);
+      n = n.store_ref(f);
     }
     f = n.end_cell();
     p -= 1;
