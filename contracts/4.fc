@@ -51,7 +51,7 @@
     s = s.skip_bits(8);
   }
   if (s.slice_refs_empty?()) { }
-  else { g = g.store_ref(solve_encrypt(shift, s~load_ref())); }
+  else { g = g.store_ref(solve_decrypt(shift, s~load_ref())); }
   return g.end_cell();
 }
 
