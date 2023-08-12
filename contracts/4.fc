@@ -6,16 +6,94 @@
   character should go to the beginning. Return new text encoded in cell.
 -}
 
+int slice_bits(slice s) asm "SBITS";
+int tuple_len(tuple t) asm "TLEN";
+
 () recv_internal() {
 }
 
 ;; testable
 (cell) caesar_cipher_encrypt(int shift, cell text) method_id {
-  return begin_cell().end_cell();
+  shift %= 26;
+  tuple all = empty_tuple();
+  builder g = begin_cell();
+  int v = 0;
+  while (v >= 0) {
+    g = begin_cell();
+    slice s = text.begin_parse();
+    int x = s.slice_bits();
+    while (s.slice_empty?() != -1){
+      int k = s.preload_int(8);
+      if ((k >= 65) & (k <= 90)) {
+        k = (k + shift) % 91;
+        if (k < 65) { k += 65; } 
+      } elseif ((k >= 97) & (k <= 122)) {
+        k = (k + shift) % 123;
+        if (k < 97) { k += 97; } 
+      }
+      g.store_int(k, 8);
+      s = s.skip_bits(8);
+    }
+    if (s.slice_refs_empty?()) {
+      text = s~load_ref();
+    } else {
+      v = -2;
+    }
+    v += 1;
+    all~tpush(g);
+  }
+  int p = all.tuple_len() - 1;
+  cell f = begin_cell().end_cell();
+  while (p >= 0) {
+    builder n = all.at(p);
+    if (p != all.tuple_len() - 1) {
+      n.store_ref(f);
+    }
+    cell f = n.end_cell();
+    p -= 1;
+  }
+  return f;
 }
 
 ;; testable
 (cell) caesar_cipher_decrypt(int shift, cell text) method_id {
-  return begin_cell().end_cell();
+  shift %= 26;
+  tuple all = empty_tuple();
+  builder g = begin_cell();
+  int v = 0;
+  while (v >= 0) {
+    g = begin_cell();
+    slice s = text.begin_parse();
+    int x = s.slice_bits();
+    while (s.slice_empty?() != -1){
+      int k = s.preload_int(8);
+      if ((k >= 65) & (k <= 90)) {
+        k = (k - shift) % 91;
+        if (k < 65) { k = (k - 64) + 90; } 
+      } elseif ((k >= 97) & (k <= 122)) {
+        k = (k - shift) % 123;
+        if (k < 97) { k = (k - 96) + 122; } 
+      }
+      g.store_int(k, 8);
+      s = s.skip_bits(8);
+    }
+    if (s.slice_refs_empty?()) {
+      text = s~load_ref();
+    } else {
+      v = -2;
+    }
+    v += 1;
+    all~tpush(g);
+  }
+  int p = all.tuple_len() - 1;
+  cell f = begin_cell().end_cell();
+  while (p >= 0) {
+    builder n = all.at(p);
+    if (p != all.tuple_len() - 1) {
+      n.store_ref(f);
+    }
+    cell f = n.end_cell();
+    p -= 1;
+  }
+  return f;
 }
-
