@@ -10,6 +10,17 @@ int slice_bits(slice s) asm "SBITS";
 int tuple_len(tuple t) asm "TLEN";
 
 () recv_internal() {
+  ;; builder g = begin_cell();
+  ;; g~store_uint(1, 8);
+  ;; g~store_uint(76, 8);
+  ;; g~store_uint(78, 8);
+  ;; ~dump(g.builder_bits());
+  ;; cell m = g.end_cell();
+  ;; slice s = m.begin_parse();
+  ;; ~dump(s.slice_bits());
+  ;; s = s.skip_bits(8);
+  ;; ~dump(s.slice_bits());
+  ;; ~dump(caesar_cipher_encrypt(1,m));
 }
 
 ;; testable
@@ -22,6 +33,7 @@ int tuple_len(tuple t) asm "TLEN";
     g = begin_cell();
     slice s = text.begin_parse();
     int x = s.slice_bits();
+    ;; ~dump(s.slice_empty?());
     while (s.slice_empty?() != -1){
       int k = s.preload_int(8);
       if ((k >= 65) & (k <= 90)) {
@@ -31,13 +43,14 @@ int tuple_len(tuple t) asm "TLEN";
         k = (k + shift) % 123;
         if (k < 97) { k += 97; } 
       }
-      g.store_int(k, 8);
+      ;; ~dump(k);
+      g~store_uint(k, 8);
       s = s.skip_bits(8);
     }
     if (s.slice_refs_empty?()) {
-      text = s~load_ref();
-    } else {
       v = -2;
+    } else {
+      text = s~load_ref();
     }
     v += 1;
     all~tpush(g);
@@ -53,6 +66,7 @@ int tuple_len(tuple t) asm "TLEN";
     p -= 1;
   }
   return f;
+  ;; return begin_cell().end_cell();
 }
 
 ;; testable
@@ -74,7 +88,7 @@ int tuple_len(tuple t) asm "TLEN";
         k = (k - shift) % 123;
         if (k < 97) { k = (k - 96) + 122; } 
       }
-      g.store_int(k, 8);
+      g~store_int(k, 8);
       s = s.skip_bits(8);
     }
     if (s.slice_refs_empty?()) {
