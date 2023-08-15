@@ -24,25 +24,6 @@ global tuple two;
 global int n_f, n_v, hash_f, hash_v, cur_hash, size_hash;
 
 () recv_internal() {
-  int x = 373;
-  int y = 511;
-  int z = 1291;
-  int t = 10815;
-  cell next_c = begin_cell().store_uint(t, 14).end_cell();
-  cell c = begin_cell().store_uint(z, 128).store_ref(next_c).end_cell();
-  slice s = find_and_replace(x, y, c).begin_parse();
-  ;; int a = 5;
-  ;; int b = 7;
-  ;; int c = 21;
-  ;; int d = 21;
-  ;; cell c1 = begin_cell().store_uint(d, 6).end_cell();
-  ;; cell c0 = begin_cell().store_uint(c, 5).store_ref(c1).end_cell();
-  ;; slice s = find_and_replace(a, b, c0).begin_parse();
-  ;; slice s = c0.begin_parse();
-  while (s.slice_data_empty?() != -1){
-    int k = s~load_uint(1);
-    ~dump(k);
-  }
 }
 
 
