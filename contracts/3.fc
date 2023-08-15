@@ -16,9 +16,12 @@
 
 -}
 
+forall X -> (tuple, ()) push_back (tuple tail, X head) asm "CONS";
+forall X -> (tuple, (X)) pop_back (tuple t) asm "UNCONS";
+forall X -> (tuple, X) list_next(tuple list) asm( -> 1 0) "UNCONS";
+
 global tuple two;
 global int n_f, n_v, hash_f, hash_v, cur_hash, size_hash;
-
 
 () recv_internal() {
 }
@@ -50,22 +53,40 @@ global int n_f, n_v, hash_f, hash_v, cur_hash, size_hash;
     }
     int k = s.preload_uint(1);
     cur_hash = cur_hash * 2 + k;
+    size_hash += 1;
     if ((n_f == size_hash) & (hash_f == cur_hash)) {
       cur_hash = 0;
       size_hash = 0;
       res~store_uint(hash_v, n_v);
     } elseif (size_hash >= n_f){
-      cur_hash -= two.at(size_hash - 1);
-      res~store_uint(k, 1);
-    } else {
-      res~store_uint(k, 1);
+      size_hash -= 1;
+      if (cur_hash >= two.at(size_hash)) {
+        res~store_uint(1, 1);
+      } else {
+        res~store_uint(0, 1);
+      }
+      cur_hash -= two.at(size_hash);
     }
     s~skip_bits(1);
-    if (res.builder_bits() > 14){
+    if (res.builder_bits() == 1023){
       cell new = solve2(s);
       res = res.store_ref(new);
       return res.end_cell();
     }
+  }
+  while (size_hash > 0){
+    if (res.builder_bits() == 1023){
+      cell new = solve2(s);
+      res = res.store_ref(new);
+      return res.end_cell();
+    }
+    size_hash -= 1;
+    if (cur_hash >= two.at(size_hash)) {
+      res~store_uint(1, 1);
+    } else {
+      res~store_uint(0, 1);
+    }
+    cur_hash -= two.at(size_hash);
   }
   return res.end_cell();
 }
@@ -79,8 +100,8 @@ global int n_f, n_v, hash_f, hash_v, cur_hash, size_hash;
     tiii *= 2;
   }
   tuple f = solve(flag); tuple v = solve(value);
-  n_f = f.at(0); hash_f = v.at(1);
-  n_v = f.at(0); hash_v = v.at(1);
+  n_f = f.at(0); hash_f = f.at(1);
+  n_v = v.at(0); hash_v = v.at(1);
   cur_hash = 0;
   size_hash = 0;
   return solve2(linked_list.begin_parse());
