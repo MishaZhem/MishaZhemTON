@@ -58,7 +58,6 @@ global int n_f, n_v, hash_f, hash_v, cur_hash, size_hash;
       } else {
         res~store_uint(0, 1);
       }
-      while (cur_hash < two.at(size_hash + 1)) { size_hash -= 1; }
     }
     if (res.builder_bits() == 1023){
       cell new = solve2(s);
