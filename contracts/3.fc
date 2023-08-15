@@ -24,7 +24,27 @@ global tuple two;
 global int n_f, n_v, hash_f, hash_v, cur_hash, size_hash;
 
 () recv_internal() {
+  int x = 373;
+  int y = 511;
+  int z = 1291;
+  int t = 10815;
+  cell next_c = begin_cell().store_uint(t, 14).end_cell();
+  cell c = begin_cell().store_uint(z, 128).store_ref(next_c).end_cell();
+  slice s = find_and_replace(x, y, c).begin_parse();
+  ;; int a = 5;
+  ;; int b = 7;
+  ;; int c = 21;
+  ;; int d = 21;
+  ;; cell c1 = begin_cell().store_uint(d, 6).end_cell();
+  ;; cell c0 = begin_cell().store_uint(c, 5).store_ref(c1).end_cell();
+  ;; slice s = find_and_replace(a, b, c0).begin_parse();
+  ;; slice s = c0.begin_parse();
+  while (s.slice_data_empty?() != -1){
+    int k = s~load_uint(1);
+    ~dump(k);
+  }
 }
+
 
 (int) solve(int n){  
   int cnt = 0;
@@ -37,11 +57,11 @@ global int n_f, n_v, hash_f, hash_v, cur_hash, size_hash;
 
 (cell) solve2(slice s){
   builder res = begin_cell();
-  while (s.slice_empty?() != -1) {
+  while (s.slice_data_empty?() != -1) {
     if (s.slice_data_empty?()) { 
       s = s~load_ref().begin_parse();
     }
-    int k = s.preload_uint(1);
+    int k = s~load_uint(1);
     cur_hash = cur_hash * 2 + k;
     if (cur_hash > 0) { size_hash += 1; }
     else { res~store_uint(0, 1); } 
@@ -59,7 +79,6 @@ global int n_f, n_v, hash_f, hash_v, cur_hash, size_hash;
       }
       while (cur_hash < two.at(size_hash + 1)) { size_hash -= 1; }
     }
-    s~skip_bits(1);
     if (res.builder_bits() == 1023){
       cell new = solve2(s);
       res = res.store_ref(new);
