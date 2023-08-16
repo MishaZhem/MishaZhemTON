@@ -55,7 +55,7 @@ global int need;
     if ((n_f == size_hash) & (hash_f == cur_hash)) {
       cur_hash = 0;
       size_hash = 0;
-      if (s.slice_bits() + n_v > 256) {
+      if (res.builder_bits() + n_v > 256) {
         need = -1;
         cell new = solve2();
         res = res.store_ref(new);
@@ -79,7 +79,7 @@ global int need;
     }
   }
   if (size_hash > 0) {
-    if (s.slice_bits() + size_hash > 256) {
+    if (res.builder_bits() + size_hash > 256) {
       cell new = solve2();
       res = res.store_ref(new);
       return res.end_cell();
