@@ -24,6 +24,33 @@ global slice s;
 global int n_f, n_v, hash_f, hash_v, cur_hash, size_hash;
 
 () recv_internal() {
+  ;; int a = 5;
+  ;; int b = 7;
+  ;; int c = 21;
+  ;; int d = 21;
+  ;; cell c1 = begin_cell().store_uint(d, 6).end_cell();
+  ;; cell c0 = begin_cell().store_uint(c, 5).store_ref(c1).end_cell();
+  ;; cell j = find_and_replace(a, b, c0);
+
+  ;; int x = 373;
+  ;; int y = 511;
+  ;; int z = 1291;
+  ;; int t = 10815;
+  ;; cell next_c = begin_cell().store_uint(t, 23).end_cell();
+  ;; cell c = begin_cell().store_uint(z, 40).store_ref(next_c).end_cell();
+  ;; cell j = find_and_replace(x, y, c);
+
+  int a = 373;
+  int b = 511;
+  int d = 21162559;
+  cell c0 = begin_cell().store_uint(d, 25).end_cell();
+  cell j = find_and_replace(a ,b, c0);
+  slice k = j.begin_parse();
+  ~dump(k);
+  while (k.slice_data_empty?() != -1){
+    int k2 = k~load_uint(1);
+    ~dump(k2);
+  }
 }
 
 
@@ -67,6 +94,11 @@ global int n_f, n_v, hash_f, hash_v, cur_hash, size_hash;
     }
   }
   if (size_hash > 0) {
+    if (s.slice_bits() > 0) {
+      cell new = solve2();
+      res = res.store_ref(new);
+      return res.end_cell();
+    }
     res~store_uint(cur_hash, size_hash);
     size_hash = 0;
   }
