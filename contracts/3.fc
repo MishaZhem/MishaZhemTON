@@ -45,7 +45,6 @@ global int n_f, n_v, hash_f, hash_v, cur_hash, size_hash;
     }
     int k = s~load_uint(1);
     cur_hash = cur_hash * 2 + k;
-    ~dump(cur_hash);
     if (cur_hash > 0) { size_hash += 1; }
     else { res~store_uint(0, 1); } 
     if ((n_f == size_hash) & (hash_f == cur_hash)) {
@@ -61,25 +60,15 @@ global int n_f, n_v, hash_f, hash_v, cur_hash, size_hash;
         res~store_uint(0, 1);
       }
     }
-    if (res.builder_bits() == 1023){
+    if (res.builder_bits() == 256){
       cell new = solve2();
       res = res.store_ref(new);
       return res.end_cell();
     }
   }
-  while (size_hash > 0){
-    if (res.builder_bits() == 1023){
-      cell new = solve2();
-      res = res.store_ref(new);
-      return res.end_cell();
-    }
-    size_hash -= 1;
-    if (cur_hash >= (1 << size_hash)) {
-      res~store_uint(1, 1);
-    } else {
-      res~store_uint(0, 1);
-    }
-    cur_hash -= (1 << size_hash);
+  if (size_hash > 0) {
+    res~store_uint(cur_hash, size_hash);
+    size_hash = 0;
   }
   return res.end_cell();
 }
