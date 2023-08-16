@@ -22,6 +22,7 @@ forall X -> (tuple, X) list_next(tuple list) asm( -> 1 0) "UNCONS";
 
 global slice s;
 global int n_f, n_v, hash_f, hash_v, cur_hash, size_hash;
+global int need;
 
 () recv_internal() {
   ;; int a = 5;
@@ -66,6 +67,10 @@ global int n_f, n_v, hash_f, hash_v, cur_hash, size_hash;
 
 (cell) solve2(){
   builder res = begin_cell();
+  if (need == -1) {
+    need = 0;
+    res~store_uint(hash_v, n_v);
+  }
   while (s.slice_empty?() != -1) {
     if (s.slice_data_empty?()) { 
       s = s~load_ref().begin_parse();
@@ -77,7 +82,14 @@ global int n_f, n_v, hash_f, hash_v, cur_hash, size_hash;
     if ((n_f == size_hash) & (hash_f == cur_hash)) {
       cur_hash = 0;
       size_hash = 0;
-      res~store_uint(hash_v, n_v);
+      if (s.slice_bits() + n_v > 256) {
+        need = -1;
+        cell new = solve2();
+        res = res.store_ref(new);
+        return res.end_cell();
+      } else {
+        res~store_uint(hash_v, n_v);
+      }
     } elseif (size_hash >= n_f){
       size_hash -= 1;
       if (cur_hash >= (1 << size_hash)) {
@@ -94,7 +106,7 @@ global int n_f, n_v, hash_f, hash_v, cur_hash, size_hash;
     }
   }
   if (size_hash > 0) {
-    if (s.slice_bits() > 0) {
+    if (s.slice_bits() + size_hash > 256) {
       cell new = solve2();
       res = res.store_ref(new);
       return res.end_cell();
@@ -113,6 +125,7 @@ global int n_f, n_v, hash_f, hash_v, cur_hash, size_hash;
   hash_v = value;
   cur_hash = 0;
   size_hash = 0;
+  need = 0;
   s = linked_list.begin_parse();
   return solve2();
 }
