@@ -38,7 +38,7 @@ global int n_f, n_v, hash_f, hash_v, cur_hash, size_hash;
 
 (cell) solve2(){
   builder res = begin_cell();
-  while (s.slice_data_empty?() != -1) {
+  while (s.slice_empty?() != -1) {
     if (s.slice_data_empty?()) { 
       s = s~load_ref().begin_parse();
     }
