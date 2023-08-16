@@ -24,7 +24,6 @@ global slice s;
 global int n_f, n_v, hash_f, hash_v, cur_hash, size_hash;
 
 () recv_internal() {
-
 }
 
 
@@ -46,6 +45,7 @@ global int n_f, n_v, hash_f, hash_v, cur_hash, size_hash;
     }
     int k = s~load_uint(1);
     cur_hash = cur_hash * 2 + k;
+    ~dump(cur_hash);
     if (cur_hash > 0) { size_hash += 1; }
     else { res~store_uint(0, 1); } 
     if ((n_f == size_hash) & (hash_f == cur_hash)) {
@@ -94,5 +94,4 @@ global int n_f, n_v, hash_f, hash_v, cur_hash, size_hash;
   size_hash = 0;
   s = linked_list.begin_parse();
   return solve2();
-  ;; return begin_cell().end_cell();
 }
