@@ -24,16 +24,18 @@ global slice s;
 global int n_f, n_v, hash_f, hash_v, cur_hash, size_hash;
 
 () recv_internal() {
+
 }
 
 
 (int) solve(int n){  
-  int cnt = 0;
-  do {
-    n~divmod(2);
-    cnt += 1;
-  } until (n == 0);
-  return cnt;
+  int l = -1; int r = 129; int m = 0;
+  while (r - l > 1){
+    m = (l + r) / 2;
+    if ((n >> m) < 1) { r = m; }
+    else { l = m; }
+  }
+  return l + 1;
 }
 
 (cell) solve2(){
@@ -84,10 +86,13 @@ global int n_f, n_v, hash_f, hash_v, cur_hash, size_hash;
 
 ;; testable
 (cell) find_and_replace(int flag, int value, cell linked_list) method_id {
-  n_f = solve(flag); hash_f = flag;
-  n_v = solve(value); hash_v = value;
+  n_f = solve(flag); 
+  hash_f = flag;
+  n_v = solve(value); 
+  hash_v = value;
   cur_hash = 0;
   size_hash = 0;
   s = linked_list.begin_parse();
   return solve2();
+  ;; return begin_cell().end_cell();
 }
