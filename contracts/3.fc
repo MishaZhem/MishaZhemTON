@@ -102,3 +102,4 @@ global int need;
   s = linked_list.begin_parse();
   return solve2();
 }
+
