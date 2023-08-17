@@ -86,6 +86,7 @@ global int need;
   hash_f = flag;
   hash_v = value;
   n_v = solve(value); 
+  n_f = solve(flag); 
   cur_hash = 0;
   size_hash = 0;
   need = 0;
