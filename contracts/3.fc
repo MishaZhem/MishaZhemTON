@@ -44,7 +44,7 @@ global int need;
     int k = s~load_uint(1);
     cur_hash = cur_hash * 2 + k;
     size_hash += 1;
-    if ((n_f == size_hash) & (hash_f == cur_hash)) {
+    if (hash_f == cur_hash) {
       cur_hash = 0;
       size_hash = 0;
       if (res.builder_bits() + n_v > 1023) {
@@ -53,21 +53,23 @@ global int need;
       } else {
         res~store_uint(hash_v, n_v);
       }
-    } elseif (size_hash >= n_f){
+    } 
+    if (size_hash >= n_f){
       size_hash -= 1;
       if (cur_hash >= (1 << size_hash)) {
         res~store_uint(1, 1);
         cur_hash -= (1 << size_hash);
       } else {
         res~store_uint(0, 1);
+      }  
+      if (res.builder_bits() == 1023){
+        return res.store_ref(solve2()).end_cell();
       }
-    }
-    if (res.builder_bits() == 1023){
-      return res.store_ref(solve2()).end_cell();
     }
   }
   if (s.slice_refs_empty?() == 0) {
     s = s~load_ref().begin_parse();
+    return res.store_ref(solve2()).end_cell();
   }
   if (size_hash > 0) {
     if (res.builder_bits() + size_hash > 1023) {
@@ -81,10 +83,9 @@ global int need;
 
 ;; testable
 (cell) find_and_replace(int flag, int value, cell linked_list) method_id {
-  n_f = solve(flag); 
   hash_f = flag;
-  n_v = solve(value); 
   hash_v = value;
+  n_v = solve(value); 
   cur_hash = 0;
   size_hash = 0;
   need = 0;
