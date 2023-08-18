@@ -78,5 +78,5 @@
 
 ;; testable
 (cell) find_and_replace(int flag, int value, cell linked_list) method_id {
-  return solve2(linked_list.begin_parse(), solve(value), solve(flag), flag, value, 0, 0, 0);
+  return solve2(linked_list.begin_parse(), solve(flag), solve(value), flag, value, 0, 0, 0);
 }
