@@ -16,9 +16,6 @@
 
 -}
 
-global slice s;
-global int n_f, n_v, hash_f, hash_v, cur_hash, size_hash, need;
-
 () recv_internal() {
 }
 
